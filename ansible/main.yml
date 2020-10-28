@@ -1,0 +1,15 @@
+---
+- name: Configure sources.list
+  hosts: all
+  roles:
+    - role: default_sources_list
+
+- name: Configure builder
+  hosts: builder
+  roles:
+    - role: builder
+
+- name: Configure webserver
+  hosts: webserver
+  roles:
+    - role: webserver

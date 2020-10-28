@@ -1,0 +1,36 @@
+---
+- name: install git
+  apt:
+    name: git
+    state: present
+
+- name: Clone source code from git
+  git:
+    repo: https://github.com/ag4544/boxfuse-sample.git
+    dest: /var/boxfuse-sample/
+
+- name: Install java
+  apt:
+    name: default-jdk
+    state: present
+
+- name: install maven
+  apt:
+    name: maven
+    state: present
+      
+- name: Build a .war artifact
+  shell: mvn package
+  args:
+    chdir: /var/boxfuse-sample/
+
+- name: Build docker image
+  shell: cp -R target/hello-1.0.war docker/ROOT.war && cd docker/ && docker build --tag=boxfuse-prod .
+  args:
+    chdir: /var/boxfuse-sample/
+
+- name: Login to docker registry
+  shell: docker login nexus.agwes.net:8443 -u dockeruser -p dockerpassword
+
+- name: Push docker image to registry
+  shell: docker tag boxfuse-prod nexus.agwes.net:8443/boxfuse-prod && docker push nexus.agwes.net:8443/boxfuse-prod

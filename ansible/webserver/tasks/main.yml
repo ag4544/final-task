@@ -1,0 +1,34 @@
+---
+- name: Install docker
+  apt:
+    name: docker.io
+    state: present
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: install letsencrypt
+  apt:
+    name: letsencrypt
+    state: latest
+
+- name: Create letsencrypt certificate
+  shell: letsencrypt certonly --webroot -w /var/www/html -m ag4544@yandex.ru --agree-tos -d {{ inventory_hostname }}
+
+- name: Generate nginx config file from template
+  template: 
+    src: tomcat.conf.j2 
+    dest: /etc/nginx/conf.d/tomcat.conf
+    mode: 0644
+  notify: reload nginx
+
+- name: Run container with application
+  shell: docker run -d -p 127.0.0.1:8443:8080 nexus.agwes.net:8443/boxfuse-prod
+
+- name: Automatic renew of the certificate
+  cron:
+    name: cert_renew
+    special_time: monthly
+    job: letsencrypt --renew-by-default certonly --webroot -w /var/www/html -m ag4544@yandex.ru --agree-tos -d {{ inventory_hostname }} && service nginx reload
