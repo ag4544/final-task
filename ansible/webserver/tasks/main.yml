@@ -21,7 +21,6 @@
   file: 
     name: /etc/nginx/sites-available/default
     state: absent
-  notify: reload nginx
 
 - name: Generate nginx config file from template
   template: 
