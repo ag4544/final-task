@@ -26,7 +26,7 @@
 - name: Generate nginx config file from template
   template: 
     src: tomcat.conf.j2 
-    dest: /etc/nginx/conf.d/tomcat.conf
+    dest: /etc/nginx/sites-available/default
     mode: 0644
   notify: reload nginx
 
