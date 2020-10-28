@@ -17,6 +17,12 @@
 - name: Create letsencrypt certificate
   shell: letsencrypt certonly --webroot -w /var/www/html -m ag4544@yandex.ru --agree-tos -d {{ inventory_hostname }}
 
+- name: Remove default nginx config
+  file: 
+    name: /etc/nginx/sites-available/default
+    state: absent
+  notify: reload nginx
+
 - name: Generate nginx config file from template
   template: 
     src: tomcat.conf.j2 
