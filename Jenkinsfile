@@ -4,13 +4,13 @@ pipeline {
     node {
       label 'jenkins-node'
     }
+  }
 
     environment {
       TF_VAR_aws_secret_key = credentials('aws_secret_key')
       TF_VAR_aws_access_key = credentials('aws_access_key')
     }
 
-  }
     stages {
         stage ('git') {
             steps {
