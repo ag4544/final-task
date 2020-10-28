@@ -18,6 +18,11 @@
   apt:
     name: maven
     state: present
+
+- name: install docker
+  apt:
+    name: docker.io
+    state: present
       
 - name: Build a .war artifact
   shell: mvn package
